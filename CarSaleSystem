@@ -1,0 +1,108 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class CarSaleSystem {
+    private List<Car> inventory = new ArrayList<>();
+    private List<Customer> customers = new ArrayList<>();
+    private List<SalesTransaction> transactions = new ArrayList<>();
+    private Scanner scanner = new Scanner(System.in);
+
+    public void addCar() {
+        System.out.print("Enter make: ");
+        String make = scanner.nextLine();
+        System.out.print("Enter model: ");
+        String model = scanner.nextLine();
+        System.out.print("Enter year: ");
+        int year = Integer.parseInt(scanner.nextLine());
+        System.out.print("Enter price: ");
+        double price = Double.parseDouble(scanner.nextLine());
+        inventory.add(new Car(make, model, year, price));
+        System.out.println("Car added!");
+    }
+
+    public void viewCars() {
+        System.out.println("Available cars:");
+        for (Car car : inventory) {
+            System.out.println(car);
+        }
+    }
+
+    public void addCustomer() {
+        System.out.print("Enter customer name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter contact info: ");
+        String contactInfo = scanner.nextLine();
+        customers.add(new Customer(name, contactInfo));
+        System.out.println("Customer added!");
+    }
+
+    public void sellCar() {
+        System.out.print("Enter customer name: ");
+        String customerName = scanner.nextLine();
+        Customer customer = customers.stream()
+                .filter(c -> c.getName().equalsIgnoreCase(customerName))
+                .findFirst()
+                .orElse(null);
+
+        if (customer == null) {
+            System.out.println("Customer not found!");
+            return;
+        }
+
+        viewCars();
+        System.out.print("Enter the index of the car to purchase: ");
+        int index = Integer.parseInt(scanner.nextLine());
+
+        if (index >= 0 && index < inventory.size()) {
+            Car car = inventory.remove(index);
+            transactions.add(new SalesTransaction(customer, car));
+            System.out.println("Transaction completed!");
+        } else {
+            System.out.println("Invalid index!");
+        }
+    }
+
+    public void viewTransactions() {
+        System.out.println("Sales Transactions:");
+        for (SalesTransaction transaction : transactions) {
+            System.out.println(transaction);
+        }
+    }
+
+    public void start() {
+        while (true) {
+            System.out.println("\n1. Add Car\n2. View Cars\n3. Add Customer\n4. Sell Car\n5. View Transactions\n6. Exit");
+            System.out.print("Choose an option: ");
+            int choice = Integer.parseInt(scanner.nextLine());
+
+            switch (choice) {
+                case 1:
+                    addCar();
+                    break;
+                case 2:
+                    viewCars();
+                    break;
+                case 3:
+                    addCustomer();
+                    break;
+                case 4:
+                    sellCar();
+                    break;
+                case 5:
+                    viewTransactions();
+                    break;
+                case 6:
+                    System.out.println("Exiting...");
+                    return;
+                default:
+                    System.out.println("Invalid option!");
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        CarSaleSystem system = new CarSaleSystem();
+        system.start();
+    }
+}
