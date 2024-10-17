@@ -1,0 +1,18 @@
+import java.util.Date;
+
+public class SalesTransaction {
+    private Customer customer;
+    private Car car;
+    private Date date;
+
+    public SalesTransaction(Customer customer, Car car) {
+        this.customer = customer;
+        this.car = car;
+        this.date = new Date();
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction: " + customer + " bought " + car + " on " + date;
+    }
+}
